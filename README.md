@@ -1,1 +1,1 @@
-# assignment2
+# MECH 325, Assignment 2
