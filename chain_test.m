@@ -18,6 +18,9 @@ T17_19 =   [25  0.250 0.125 780    0.09  0.130 0.252;
         
 % Table 17-20 Tabulated lubrication type for 17 tooth sprocket
 % 0 - type A; 1 - type B; 2 - type C; 3 - type C'
+keySet = [0 1 2 3];
+valueSet =   {'type A', 'type B', 'type C', 'type C'};
+T17_20_Lubrication = containers.Map(keySet,valueSet);
 T17_20 = [-1	25	35	40	41	50	60	80	100	120	140	160	180	200	240
             50	0	0	0	0	0	0	0	0	0	1	1	1	1	1
             100	0	0	0	0	0	0	0	1	1	1	1	1	1	1
@@ -54,10 +57,11 @@ T17_23 = [  1 1.0;
             8 6.0];
 
 % Eqn 17-32 Link-Plate Limited (Post Extreme) Nominal Power for All Cases page 911
-H_1 = @(N_1, n_1, p) 0.004 * N_1^1.08 * n_1^.9 * p^(3-.07*p); % [hp]
+H_1 = @(N_1, n_1, p, a) 0.004^(a~=41) * 0.0022^(a==41) * N_1^1.08 * n_1^.9 * p^(3-.07*p); % [hp]
 % where N_1 = number of teeth in the smaller sprocket
 % n_1 = sprocket speed, rev/min
 % p = pitch of the chain, in
+% a = ANSI chain number
 
 % Eqn 17-33 Link-Plate (Pre Extreme) Limited Nominal Power for Magic 17 tooth Case page 911
 K_r = @(a) 29*(a==25) + 29*(a==35) + 3.4*(a==41) + 17*(a>=40)*(a~=41);
@@ -124,15 +128,17 @@ end
 L_p = ceil(2*C/pitch+(N_1+N_2)/2+(N_1-N_2)^2/(4*pi^2*C/pitch)); % number of pitches
 L = L_p*pitch; % [inches] chain length
 
-[H_tab,isPostExtreme] = min([H_1(17,n_1,pitch),H_2_17(ANSI_chain_number,17,n_1,pitch)]); % [hp] Tabulated horsepower for magic case 17
+[H_tab,isPostExtreme] = min([H_1(17,n_1,pitch,ANSI_chain_number),H_2_17(ANSI_chain_number,17,n_1,pitch)]); % [hp] Tabulated horsepower for magic case 17
 isPostExtreme = isPostExtreme-1; % boolean isPostExtreme
 constant = H_tab^2.5*15000/100/(17^3.75^0); % eqn 17-40 Some Magic Constant
 % SOMEONE ASK MIKELSON ABOUT 17^3.75 ???
 if N_1~=17
     H_tab_prime = (constant*L_p/h)^(1/2.5); % [hp] Normalized Tabulated Horsepower
-    [~,isPostExtreme] = min([H_1(N_1,n_1,pitch),H_2(ANSI_chain_number,N_1,n_1,pitch,L_p,h)]); % [int] integer [1 2] isPostExreme for our case
+    [~,isPostExtreme] = min([H_1(N_1,n_1,pitch,ANSI_chain_number),H_2(ANSI_chain_number,N_1,n_1,pitch,L_p,h)]); % [int] integer [1 2] isPostExreme for our case
     isPostExtreme = isPostExtreme-1; % boolean isPostExtreme
-    % FOR SOME REASON WE USED PRE-EXTREME IN TUTORIAL EVEN THOUGH WE GET POST
+    % FOR SOME REASON WE USED PRE-EXTREME IN TUTORIAL EVEN THOUGH WE GET POST WHY ???
+else
+    H_tab_prime = H_tab;
 end
 
 H_allowable = H_tab_prime*K_1(N_1,isPostExtreme)*(K_2^(N_1~=17)); % [hp] Allowable Horsepower
@@ -142,4 +148,4 @@ n_allowable = 1000*(82.5/(7.95^pitch*1.0278^N_1*1.323^(F_allowable/1000)))^(1/(1
 display(H_allowable)
 display(F_allowable)
 display(n_allowable)
-display(['lubrication type only if N_1=17 : ' num2str(lubrication_type)])
+display(['Lubrication type only if N_1=17 : ' T17_20_Lubrication(lubrication_type)])
