@@ -1,12 +1,13 @@
 function [ output_args ] = chain_test( ANSI_chain_number, N_1, N_2, n_1, C, h, S)
-%% Independent Variables passed to function
-% ANSI_chain_number = 40;
-% N_1 = 21; % number of teeth of driving sprocket
-% N_2 = 84; % number of teeth of driven sprcket
-% n_1 = 2000; % [rpm] angular velocity of driving sprocket
-% C = 20; % [inches] center distance of sprockets
-% h = 20000; % [hours] expected lifetime
-% S = 4; % Number of strands
+
+%% Independent Variables
+ANSI_chain_number = 40;
+N_1 = 21; % number of teeth of driving sprocket
+N_2 = 84; % number of teeth of driven sprcket
+n_1 = 2000; % [rpm] angular velocity of driving sprocket
+C = 20; % [inches] center distance of sprockets
+h = 20000; % [hours] expected lifetime
+S = 4; % Number of strands
 
 
 %% Tables And Formulas
@@ -152,6 +153,5 @@ display(F_allowable)
 display(n_allowable)
 display(['Lubrication type only if N_1=17 : ' T17_20_Lubrication(lubrication_type)])
 
-output_args = [H_allowable, F_allowable, n_allowable, lubrication_type];
 
 end
