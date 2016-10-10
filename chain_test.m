@@ -1,13 +1,23 @@
-function [ output_args ] = chain_test( ANSI_chain_number, N_1, N_2, n_1, C, h, S)
+function [ output ] = chain_test( input_args )
 %% Independent Variables passed to function
-% ANSI_chain_number = 40;
-% N_1 = 21; % number of teeth of driving sprocket
-% N_2 = 84; % number of teeth of driven sprcket
-% n_1 = 2000; % [rpm] angular velocity of driving sprocket
-% C = 20; % [inches] center distance of sprockets
-% h = 20000; % [hours] expected lifetime
-% S = 4; % Number of strands
+ANSI_chain_number = input_args(1);
+N_1 = input_args(2); % number of teeth of driving sprocket
+N_2 = input_args(3); % number of teeth of driven sprcket
+n_1 = input_args(4); % [rpm] angular velocity of driving sprocket
+C = input_args(5); % [inches] center distance of sprockets
+h = input_args(6); % [hours] expected lifetime
+S = input_args(7); % Number of strands
+dN_1 = input_args(8); % [in] diameter of driving sprocket
+dN_2 = input_args(9); % [in] diameter of driven sprocket
 
+%% Force calculation
+pound_force_constant = 126050.715; % [lb/rot] = [hp]/(pi/[min]/[in] 
+F = pound_force_constant*h/n_1/dN_1; % force applied to driving sprocket
+
+%% Chain length calculation
+ThetaN_1 = pi-2*asin((dN_2-dN_1)/(2*C));
+ThetaN_2 = 2*pi-ThetaN_1;
+chain_length = sqrt(4*C^2-(dN_2-dN_1)^2)+1/2*(dN_2*ThetaN_2+dN_1*ThetaN_1);
 
 %% Tables And Formulas
 % Table 17-19 Dimensions of American Standard Roller Chains Single Strand page 908
@@ -145,13 +155,13 @@ end
 
 H_allowable = H_tab_prime*K_1(N_1,isPostExtreme)*(K_2^(N_1~=17)); % [hp] Allowable Horsepower
 F_allowable = H_allowable*33000*12/N_1/pitch/2000; % [lbf] Allowable max force
-n_allowable = 1000*(82.5/(7.95^pitch*1.0278^N_1*1.323^(F_allowable/1000)))^(1/(1.59*log(pitch)+1.873)); % [rev/min] Maximum allowable rotational speed on driving sprocket
+n_allowable = 1000*(82.5/(7.95^pitch*1.0278^N_1*1.323^(F/1000)))^(1/(1.59*log(pitch+1.873))); % [rev/min] Maximum allowable rotational speed on driving sprocket
 
 display(H_allowable)
 display(F_allowable)
 display(n_allowable)
 display(['Lubrication type only if N_1=17 : ' T17_20_Lubrication(lubrication_type)])
 
-output_args = [H_allowable, F_allowable, n_allowable, lubrication_type];
+output = chain_length;
 
 end
