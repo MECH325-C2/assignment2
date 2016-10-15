@@ -32,9 +32,9 @@ T17_19 =   [25  0.250 0.125 780    0.09  0.130 0.252;
             240 3.00  1.875 112000 16.4  1.875 3.458];
         
 % Table 17-20 Tabulated lubrication type for 17 tooth sprocket
-% 0 - type A; 1 - type B; 2 - type C; 3 - type C'
+% 0 - type A; 1 - type B; 2 - type C; 3 - type C-prime'
 keySet = [0 1 2 3];
-valueSet =   {'type A', 'type B', 'type C', 'type C'};
+valueSet =   {'type A', 'type B', 'type C', 'type C-prime'};
 T17_20_Lubrication = containers.Map(keySet,valueSet);
 T17_20 = [-1	25	35	40	41	50	60	80	100	120	140	160	180	200	240
             50	0	0	0	0	0	0	0	0	0	1	1	1	1	1
