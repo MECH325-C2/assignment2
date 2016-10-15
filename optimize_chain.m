@@ -19,7 +19,7 @@ cost_1 = cost_1 + ceil(chain_length/12)*cost_per_foot + 0.87;
 
 
 %% Second stage drive, 5:1 ratio, parallel drives 2x
-chain_test([50, 12, 60, 1200/2, 22, h, 1, 2.71, 12.3]);
+chain_length = chain_test([50, 12, 60, 1200/2, 22, h, 1, 2.71, 12.3]);
 % driving: 6793K166
 cost_2 = 17.85;
 % driven: 6793K186

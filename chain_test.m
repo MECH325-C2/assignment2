@@ -153,10 +153,10 @@ F_allowable = H_allowable*33000*12/N_1/pitch/2000; % [lbf] Allowable max force
 n_allowable = 1000*(82.5/(7.95^pitch*1.0278^N_1*1.323^(F/1000)))^(1/(1.59*log(pitch+1.873))); % [rev/min] Maximum allowable rotational speed on driving sprocket
 
 display(H_allowable)
-display(life_allowable)
+%display(life_allowable) %need to be calculated
 display(n_allowable)
 display(['Lubrication type only if N_1=17 : ' T17_20_Lubrication(lubrication_type)])
 
-output = chain_length;
+output = L;
 
 end
