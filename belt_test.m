@@ -1,4 +1,4 @@
-function [ output ] = belt_test( input  )
+function [ output ] = belt_test( input )
 %% For flat belts.
 %% Independent Variables passed to function
 % 1 -> small pulley
@@ -28,7 +28,6 @@ f =     input(14); % coefficint of friction (table 17-2)
 g = 32.17; % [ft/s^2] gravitational acceleration
 
 
-
 %% Belt length calculation
 ThetaN_1 = pi-2*asin((DN2-dN1)/(2*C));                                  % [rad] angle of contact for small pulley
 ThetaN_2 = 2*pi-ThetaN_1;                                               % [rad] angle of contact for large pulley
@@ -38,7 +37,7 @@ belt_length = sqrt(4*C^2-(DN2-dN1)^2)+1/2*(DN2*ThetaN_2+dN1*ThetaN_1);  % [in] t
 %% Belt drive analisys steps
 % 1. Find exp(f*phi)from belt-drive geometry and friction
 phi = ThetaN_1;
-exp_f_phi=exp(f,phi);               % useful quantaty for later calculations.
+% exp_f_phi=exp(f,phi);               % useful quantaty for later calculations.
 
 %%
 % 2. From belt geometry and speed find Fc
@@ -48,8 +47,7 @@ weight_per_length = 12*gamma*b*t;   % [lbf/ft] weight per foot of belt
 Fc = weight_per_length/g*(V/60)^2;  % [lbf] hoop tension due to centrifugal force
 
 % 3. Find necessary torque
-Ha = Hnom*Ks*nd;                    % [hp] transmitted design power
-T = 63025*Ha/n1;                    % [lbf in] transmitted torque 
+T = 63025*Hnom*Ks*nd/n1;            % [lbf in] transmitted torque 
 
 % 4. From torque T find the necessary (F_1)a - F_2 = 2T/d
 force_difference = 2*T/d;           % [lbf] (F_1)a - F_2
@@ -63,6 +61,8 @@ F2 = F1a-force_difference;          % [lbf] slack side tension in belt
 % 7. From Eq. (i) find the necessary initial tension Fi
 Fi = (F1a+F2)/2-Fc;                 % [lbf] initial tension
 
+disp('Initial tension: ', Fi);
+
 % 8. Check the friction development, fprime < f. Use eq. 17-7 solved for fprime:
 fprime = 1/phi * log((F1a-Fc)/(F2-Fc)); % developed friction
 
@@ -74,13 +74,16 @@ else
 end
 
 % 9 Find the factor of safety
-Ht = (Fa1 - F2)*V/33000;            % [hp] transmitted power
+Ha = (Fa1 - F2)*V/33000;            % [hp] transmitted power
 
 nfs = Ha/(Hnom*Ks);                 % safety factor
 
-dip = C^2*w/(96*Fi);                % [in] catenary dip
+disp('allowable power: ', Ha);
+disp('safety factor: ', nfs);
 
+% dip = C^2*w/(96*Fi);                % [in] catenary dip
 
+output = belt_length;
 
 
 
