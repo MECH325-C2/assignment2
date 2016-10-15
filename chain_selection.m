@@ -1,4 +1,4 @@
-function [  ] = optimize_chain( )
+function [  ] = chain_selection( )
 
 % test function variable order:
 
