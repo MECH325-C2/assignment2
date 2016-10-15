@@ -48,7 +48,8 @@ weight_per_length = 12*gamma*b*t;   % [lbf/ft] weight per foot of belt
 Fc = weight_per_length/g*(V/60)^2;  % [lbf] hoop tension due to centrifugal force
 
 % 3. Find necessary torque
-T = 63025*Hnom*Ks*nd/n1;            % [lbf in] transmitted torque 
+Ha = Hnom*Ks*nd;                    % [hp] transmitted design power
+T = 63025*Ha/n1;                    % [lbf in] transmitted torque 
 
 % 4. From torque T find the necessary (F_1)a - F_2 = 2T/d
 force_difference = 2*T/d;           % [lbf] (F_1)a - F_2
@@ -73,11 +74,13 @@ else
 end
 
 % 9 Find the factor of safety
-Ha = Hnom*Ks*nd;    % [hp] transmitted design power
-nfs = Ha/(Hnom*Ks); % safety factor
+Ht = (Fa1 - F2)*V/33000;            % [hp] transmitted power
+
+nfs = Ha/(Hnom*Ks);                 % safety factor
+
+dip = C^2*w/(96*Fi);                % [in] catenary dip
 
 
-H_transmitted = (F_1 - F_2)V/33000;
 
 
 
