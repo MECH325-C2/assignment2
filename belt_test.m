@@ -18,7 +18,7 @@ Ks =    input(8); % service factor
 nd =    input(9); % design factor, for exigencies
 
 Cp =    input(10); % pulley correction factor (table 17-4, flat belts)
-Cv =    input(11); % velocity correction factor (=1 for polyamide belts)
+Cv =    input(11); % velocity correction factor (=1 for polyamide and urethane belts)
 
 Fa =    input(12); % [lbf/in] manufacturers' allowed tension, allowable tension per unit width at 600 ft/min (table 17-2)
 gamma = input(13); % [lbf/in^3] spesific weight (table 17-2)
