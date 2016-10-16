@@ -10,9 +10,7 @@ S = input_args(7); % Number of strands
 dN_1 = input_args(8); % [in] diameter of driving sprocket
 dN_2 = input_args(9); % [in] diameter of driven sprocket
 
-%% Force calculation
-pound_force_constant = 126050.715; % [lb/rot] = [hp]/(pi/[min]/[in] 
-F = pound_force_constant*h/n_1/dN_1; % force applied to driving sprocket
+
 
 %% Tables And Formulas
 % Table 17-19 Dimensions of American Standard Roller Chains Single Strand page 908
@@ -147,6 +145,9 @@ if N_1~=17
 else
     H_tab_prime = H_tab;
 end
+
+pound_force_constant = 396000; % [HP}*[12]*[33000] 
+F = pound_force_constant/pitch/n_1/dN_1; % force applied to driving sprocket
 
 H_allowable = H_tab_prime*K_1(N_1,isPostExtreme)*(K_2^(N_1~=17)); % [hp] Allowable Horsepower
 F_allowable = H_allowable*33000*12/N_1/pitch/2000; % [lbf] Allowable max force
