@@ -1,16 +1,13 @@
-function [ output ] = chain_test( input_args )
+function [ output ] = chain_test( input )
 %% Independent Variables passed to function
-ANSI_chain_number = input_args(1);
-N_1 = input_args(2); % number of teeth of driving sprocket
-N_2 = input_args(3); % number of teeth of driven sprcket
-n_1 = input_args(4); % [rpm] angular velocity of driving sprocket
-C = input_args(5); % [inches] center distance of sprockets
-h = input_args(6); % [hours] expected lifetime
-S = input_args(7); % Number of strands
-dN_1 = input_args(8); % [in] diameter of driving sprocket
-dN_2 = input_args(9); % [in] diameter of driven sprocket
-
-
+ANSI_number =   input(1); % ansi chain number
+N_1 =           input(2); % number of teeth of driving sprocket
+N_2 =           input(3); % number of teeth of driven sprcket
+n_1 =           input(4); % [rpm] angular velocity of driving sprocket
+C =             input(5); % [inches] center distance of sprockets
+h =             input(6); % [hours] expected lifetime
+S =             input(7); % Number of strands
+Ks =            input(8); % Shock number
 
 %% Tables And Formulas
 % Table 17-19 Dimensions of American Standard Roller Chains Single Strand page 908
@@ -95,7 +92,7 @@ H_2 = @(ANSI_chain_number, N_1, n_1, p, L_p, h) 1000*(K_r(ANSI_chain_number)*((N
 %% Dependent Variables Table Lookups
 % Table 17_19 for ANSI Chain Number
 for i=1:length(T17_19(:,1))
-    if (T17_19(i,1)==ANSI_chain_number)
+    if (T17_19(i,1)==ANSI_number)
         pitch = T17_19(i,2); % [inches] chain
         width = T17_19(i,3); % [inches] chain
         minimum_tensile_strength = T17_19(i,4); % [lbf] chain
@@ -117,7 +114,7 @@ end
 % Table 17_20 Lubrication Type
 for i=1:length(T17_20(1,:))
     a = T17_20(1,i);
-    if (a==ANSI_chain_number)
+    if (a==ANSI_number)
        for j= length(T17_20(:,1)):-1:1
            b = T17_20(j,1);
            if (b<n_1)
@@ -133,24 +130,23 @@ end
 L_p = ceil(2*C/pitch+(N_1+N_2)/2+(N_1-N_2)^2/(4*pi^2*C/pitch)); % number of pitches
 L = L_p*pitch; % [inches] chain length
 
-[H_tab,isPostExtreme] = min([H_1(17,n_1,pitch,ANSI_chain_number),H_2_17(ANSI_chain_number,17,n_1,pitch)]); % [hp] Tabulated horsepower for magic case 17
+[H_tab,isPostExtreme] = min([H_1(17,n_1,pitch,ANSI_number),H_2_17(ANSI_number,17,n_1,pitch)]); % [hp] Tabulated horsepower for magic case 17
 isPostExtreme = isPostExtreme-1; % boolean isPostExtreme
 constant = H_tab^2.5*15000/100/(17^3.75^0); % eqn 17-40 Some Magic Constant
 % SOMEONE ASK MIKELSON ABOUT 17^3.75 ???
 if N_1~=17
     H_tab_prime = (constant*L_p/h)^(1/2.5); % [hp] Normalized Tabulated Horsepower
-    [~,isPostExtreme] = min([H_1(N_1,n_1,pitch,ANSI_chain_number),H_2(ANSI_chain_number,N_1,n_1,pitch,L_p,h)]); % [int] integer [1 2] isPostExreme for our case
+    [~,isPostExtreme] = min([H_1(N_1,n_1,pitch,ANSI_number),H_2(ANSI_number,N_1,n_1,pitch,L_p,h)]); % [int] integer [1 2] isPostExreme for our case
     isPostExtreme = isPostExtreme-1; % boolean isPostExtreme
     % FOR SOME REASON WE USED PRE-EXTREME IN TUTORIAL EVEN THOUGH WE GET POST WHY ???
 else
     H_tab_prime = H_tab;
 end
 
-pound_force_constant = 396000; % [HP}*[12]*[33000] 
+pound_force_constant = 12*33000; % [HP]*[12]*[33000] 
 F = pound_force_constant/pitch/n_1/dN_1; % force applied to driving sprocket
 
-H_allowable = H_tab_prime*K_1(N_1,isPostExtreme)*(K_2^(N_1~=17)); % [hp] Allowable Horsepower
-F_allowable = H_allowable*33000*12/N_1/pitch/2000; % [lbf] Allowable max force
+H_allowable = H_tab_prime*K_1(N_1,isPostExtreme)*(K_2^(N_1~=17));                             % [hp] Allowable Horsepower
 n_allowable = 1000*(82.5/(7.95^pitch*1.0278^N_1*1.323^(F/1000)))^(1/(1.59*log(pitch+1.873))); % [rev/min] Maximum allowable rotational speed on driving sprocket
 
 display(H_allowable)

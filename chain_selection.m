@@ -8,7 +8,7 @@ h = (2+2)*4*365*4;
 
 
 %% First stage drive, 2:1 ratio
-chain_length = chain_test([40, 20, 40, 1200, 8, h, 1, 3.46, 6.65]);
+chain_length = chain_test([40, 20, 40, 1200, 8, h, 1, ]);
 % driving: 6793K152
 cost_1 = 22.34;
 % driven: 6793K161

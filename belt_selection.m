@@ -1,7 +1,7 @@
 function [  ] = belt_selection( )
 %%
 % Values from example 17-1 in book to confirm correct operation
-% length = belt_test([6, 18, 96, 1750, 6, 0.13, 15, 1.25, 2.5, 0.70, 1, 100, 0.042, 0.8]);
+%length = belt_test([6, 18, 96, 1750, 6, 0.13, 15, 1.25, 1.1, 0.70, 1, 100, 0.042, 0.8]);
 
 %%
 % Possible settup: 6:60 pulleys, 
