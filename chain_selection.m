@@ -1,14 +1,12 @@
 function [  ] = chain_selection( )
 
-% test function variable order:
-
 % ANSI_chain_number, N_1, N_2, n_1, C, h, S, F, dN_1, dN_2
 
-h = (2+2)*4*365*4;
-
+h = (2+2)*4*250*4;
+Ks = 1.4; 
 
 %% First stage drive, 2:1 ratio
-chain_length = chain_test([40, 20, 40, 1200, 8, h, 1, ]);
+chain_length = chain_test([40, 20, 40, 1200, 8, h, 1, Ks, 1]);
 % driving: 6793K152
 cost_1 = 22.34;
 % driven: 6793K161
@@ -19,7 +17,7 @@ cost_1 = cost_1 + ceil(chain_length/12)*cost_per_foot + 0.87;
 
 
 %% Second stage drive, 5:1 ratio, parallel drives 2x
-chain_length = chain_test([50, 12, 60, 1200/2, 22, h, 1, 2.71, 12.3]);
+chain_length = chain_test([50, 12, 60, 1200/2, 22, h, 1, Ks, 1]);
 % driving: 6793K166
 cost_2 = 17.85;
 % driven: 6793K186

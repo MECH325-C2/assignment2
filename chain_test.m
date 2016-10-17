@@ -8,6 +8,7 @@ C =             input(5); % [inches] center distance of sprockets
 h =             input(6); % [hours] expected lifetime
 S =             input(7); % Number of strands
 Ks =            input(8); % Shock number
+H_nom =         input(9); % nominal horse power
 
 %% Tables And Formulas
 % Table 17-19 Dimensions of American Standard Roller Chains Single Strand page 908
@@ -29,7 +30,7 @@ T17_19 =   [25  0.250 0.125 780    0.09  0.130 0.252;
 % Table 17-20 Tabulated lubrication type for 17 tooth sprocket
 % 0 - type A; 1 - type B; 2 - type C; 3 - type C-prime'
 keySet = [0 1 2 3];
-valueSet =   {'type A', 'type B', 'type C', 'type C-prime'};
+valueSet = {'type A', 'type B', 'type C', 'type C-prime'};
 T17_20_Lubrication = containers.Map(keySet,valueSet);
 T17_20 = [-1	25	35	40	41	50	60	80	100	120	140	160	180	200	240
             50	0	0	0	0	0	0	0	0	0	1	1	1	1	1
@@ -143,16 +144,19 @@ else
     H_tab_prime = H_tab;
 end
 
-pound_force_constant = 12*33000; % [HP]*[12]*[33000] 
-F = pound_force_constant/pitch/n_1/dN_1; % force applied to driving sprocket
+pound_force_constant = 12*33000;            % [HP]*[12]*[33000] 
+F = pound_force_constant/pitch/n_1/dN_1;    % force applied to driving sprocket
 
 H_allowable = H_tab_prime*K_1(N_1,isPostExtreme)*(K_2^(N_1~=17));                             % [hp] Allowable Horsepower
 n_allowable = 1000*(82.5/(7.95^pitch*1.0278^N_1*1.323^(F/1000)))^(1/(1.59*log(pitch+1.873))); % [rev/min] Maximum allowable rotational speed on driving sprocket
 
-display(H_allowable)
-%display(life_allowable) %need to be calculated
-display(n_allowable)
-display(['Lubrication type only if N_1=17 : ' T17_20_Lubrication(lubrication_type)])
+n_sf = H_allowable/(H_nom*ks);              % safety factor, general for belts
+
+disp(['H_allowable:     ', num2str(H_allowable)]);
+disp(['allowable life:  ', num_typlife_allowable]) %need to be calculated
+disp(['rpm:             ', n_allowable])
+disp(['safety factor:   ', n_sf])
+disp(['lubrication type (for N_1=17): ' T17_20_Lubrication(lubrication_type)])
 
 output = L;
 
