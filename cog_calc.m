@@ -1,4 +1,6 @@
 %% Transmission ratio calculation
+
+%%
 % We only know the motor can output 1hp at the speed it maintained before
 % the refurbishment of the system. We can thus determine this speed from the old
 % rotational speed of the drum (30rpm) and the previous 40:1 gearing:
