@@ -1,14 +1,13 @@
 function [ output ] = chain_test( input )
 %% Independent Variables passed to function
-ANSI_number =   input(1); % ansi chain number
+ANSI_number =   input(1); % ANSI chain number
 N_1 =           input(2); % number of teeth of driving sprocket
 N_2 =           input(3); % number of teeth of driven sprcket
 n_1 =           input(4); % [rpm] angular velocity of driving sprocket
 C =             input(5); % [inches] center distance of sprockets
 h =             input(6); % [hours] expected lifetime
-S =             input(7); % Number of strands
-Ks =            input(8); % Shock number
-H_nom =         input(9); % nominal horse power
+S =             input(7); % number of strands
+H_nom =         input(8); % nominal horse power
 
 %% Tables And Formulas
 % Table 17-19 Dimensions of American Standard Roller Chains Single Strand page 908
@@ -132,32 +131,28 @@ L_p = ceil(2*C/pitch+(N_1+N_2)/2+(N_1-N_2)^2/(4*pi^2*C/pitch)); % number of pitc
 L = L_p*pitch; % [inches] chain length
 
 [H_tab,isPostExtreme] = min([H_1(17,n_1,pitch,ANSI_number),H_2_17(ANSI_number,17,n_1,pitch)]); % [hp] Tabulated horsepower for magic case 17
-isPostExtreme = isPostExtreme-1; % boolean isPostExtreme
+isPostExtreme = isPostExtreme-1;            % boolean isPostExtreme
 constant = H_tab^2.5*15000/100/(17^3.75^0); % eqn 17-40 Some Magic Constant
-% SOMEONE ASK MIKELSON ABOUT 17^3.75 ???
+
 if N_1~=17
     H_tab_prime = (constant*L_p/h)^(1/2.5); % [hp] Normalized Tabulated Horsepower
     [~,isPostExtreme] = min([H_1(N_1,n_1,pitch,ANSI_number),H_2(ANSI_number,N_1,n_1,pitch,L_p,h)]); % [int] integer [1 2] isPostExreme for our case
     isPostExtreme = isPostExtreme-1; % boolean isPostExtreme
-    % FOR SOME REASON WE USED PRE-EXTREME IN TUTORIAL EVEN THOUGH WE GET POST WHY ???
 else
     H_tab_prime = H_tab;
 end
 
-pound_force_constant = 12*33000;            % [HP]*[12]*[33000] 
-F = pound_force_constant/pitch/n_1/dN_1;    % force applied to driving sprocket
+V = N_1*pitch*n_1/12;                       % [ft/min] chain velocity (eq. 17-30)
+pound_force_constant = 33000;               % [lb] coversion factor from HP/ft/min in lb
+F = pound_force_constant * H_nom / V;       % force applied to driving sprocket
 
 H_allowable = H_tab_prime*K_1(N_1,isPostExtreme)*(K_2^(N_1~=17));                             % [hp] Allowable Horsepower
 n_allowable = 1000*(82.5/(7.95^pitch*1.0278^N_1*1.323^(F/1000)))^(1/(1.59*log(pitch+1.873))); % [rev/min] Maximum allowable rotational speed on driving sprocket
 
-n_sf = H_allowable/(H_nom*ks);              % safety factor, general for belts
-
-disp(['H_allowable:     ', num2str(H_allowable)]);
-disp(['allowable life:  ', num_typlife_allowable]) %need to be calculated
-disp(['rpm:             ', n_allowable])
-disp(['safety factor:   ', n_sf])
-disp(['lubrication type (for N_1=17): ' T17_20_Lubrication(lubrication_type)])
-
+disp(' ');
+disp(['H_allowable:              ', num2str(H_allowable)]);
+disp(['rpm safety factor:        ', num2str(n_allowable/n_1)]);
+disp(['lubrication (for N_1=17): ' T17_20_Lubrication(lubrication_type)]);
 output = L;
 
 end
