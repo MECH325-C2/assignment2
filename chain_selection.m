@@ -9,9 +9,9 @@ h = (2+2)*4*250*4;          % hours of operation
 disp(['Hours of operation: ', num2str(h)]);
 
 %% First stage drive, ~2:1 ratio
-chain_length = chain_test([35, 21, 40, 1200, 8, h*2.5, 1, 1]);
-cost_1 = 14.65;             % driving: 6793K129
-cost_1 = cost_1 + 28.13;    % driven: 6793K137
+chain_length = chain_test([40, 21, 40, 1200, 8, h*2.5, 1, 1]);
+cost_1 = 24.70;             % driving: 6793K153
+cost_1 = cost_1 + 46.10;    % driven: 6793K161
 % cost_1 = cost_1 + 70.64;    % chain tensioner: 5896K1
 
 cost_per_foot = 3.90;       % chain: 6261K172
