@@ -1,4 +1,4 @@
-function [ output ] = chain_test( input )
+    function [ output ] = chain_test( input )
 %% Independent Variables passed to function
 ANSI_number =   input(1); % ANSI chain number
 N_1 =           input(2); % number of teeth of driving sprocket
